@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { runExtraction } from "./lib/extractor";
+import { runExtraction } from "../lib/extractor";
 import Test from "./Test";
 
 export default function Home() {
