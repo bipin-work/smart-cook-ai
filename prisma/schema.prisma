@@ -10,5 +10,27 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+}
+
+model Recipe {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title String
+  description String
+  cookTime String
+  servings Int
+  sourceUrl String
+  instructions Json
+  createdAt  DateTime    @default(now()) @db.Timestamp(6)
+  ingredients Ingredient[]
+  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
+}
+
+model Ingredient {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  amount String
+  unit String
+
+  recipeId String @db.Uuid
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 }

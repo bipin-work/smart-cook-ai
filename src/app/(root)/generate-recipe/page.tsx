@@ -18,16 +18,16 @@ import { Input } from "@/components/ui/input";
 import GeneratedRecipe from "./generated-recipe";
 import GenerateRecipe from "./generate-recipe";
 const recipe = {
-  id: crypto.randomUUID(),
+  id: 11,
   title: "AI-Generated Pasta Dish",
   description: "A delicious pasta recipe generated from your prompt: ",
   ingredients: [
-    { id: crypto.randomUUID(), name: "Pasta", amount: "400", unit: "g" },
-    { id: crypto.randomUUID(), name: "Olive oil", amount: "2", unit: "tbsp" },
-    { id: crypto.randomUUID(), name: "Garlic", amount: "3", unit: "cloves" },
-    { id: crypto.randomUUID(), name: "Tomatoes", amount: "400", unit: "g" },
-    { id: crypto.randomUUID(), name: "Basil", amount: "1", unit: "handful" },
-    { id: crypto.randomUUID(), name: "Parmesan", amount: "50", unit: "g" },
+    { id: 1, name: "Pasta", amount: "400", unit: "g" },
+    { id: 2, name: "Olive oil", amount: "2", unit: "tbsp" },
+    { id: 3, name: "Garlic", amount: "3", unit: "cloves" },
+    { id: 4, name: "Tomatoes", amount: "400", unit: "g" },
+    { id: 5, name: "Basil", amount: "1", unit: "handful" },
+    { id: 6, name: "Parmesan", amount: "50", unit: "g" },
   ],
   instructions: [
     "Bring a large pot of salted water to boil and cook pasta according to package directions",
