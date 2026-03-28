@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -5,14 +7,47 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
+import { Toaster } from "@/components/ui/sonner";
+import { saveRecipe } from "@/lib/actions/recipe.actions";
+import { InsertIngredient, InsertRecipe } from "@/types/recipe";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
-const GeneratedRecipe = ({ generatedRecipe }: any) => {
-  console.log("dd", generatedRecipe);
+interface GeneratedRecipeProps {
+  generatedRecipe: InsertRecipe;
+  clearRecipe: () => void;
+}
+
+const GeneratedRecipe: React.FC<GeneratedRecipeProps> = ({
+  generatedRecipe,
+  clearRecipe,
+}) => {
+  const [isSaved, setIsSaved] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const onGenerateAgain = () => {
+    clearRecipe();
+  };
+  const handleSaveRecipe = async () => {
+    startTransition(async () => {
+      const res = await saveRecipe(generatedRecipe);
+      if (!res?.success) {
+        toast.error(res.message);
+        return;
+      }
+      setIsSaved(true);
+      toast.success(res.message);
+    });
+  };
   return (
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>{generatedRecipe.title}</CardTitle>
+          <CardTitle>
+            {generatedRecipe.title}{" "}
+            {isSaved && (
+              <Badge className="size-sm bg-green-600 ml-2">Saved</Badge>
+            )}
+          </CardTitle>
           <CardDescription>{generatedRecipe.description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -29,8 +64,8 @@ const GeneratedRecipe = ({ generatedRecipe }: any) => {
           <div>
             <h3 className="mb-3">Ingredients</h3>
             <ul className="space-y-2">
-              {generatedRecipe.ingredients.map((ing: any) => (
-                <li key={ing.id} className="flex items-center gap-2">
+              {generatedRecipe.ingredients.map((ing: InsertIngredient) => (
+                <li key={ing.name} className="flex items-center gap-2">
                   <span className="size-1.5 rounded-full bg-orange-500" />
                   {ing.amount} {ing.unit} {ing.name}
                 </li>
@@ -52,6 +87,20 @@ const GeneratedRecipe = ({ generatedRecipe }: any) => {
           </div>
         </CardContent>
       </Card>
+      <div className="flex items-center gap-4">
+        {!isSaved && (
+          <Button className="flex-1" onClick={handleSaveRecipe}>
+            {isPending ? "Saving..." : "Save Recipe"}
+          </Button>
+        )}
+        <Button
+          variant="outline"
+          className="flex-1 max-w-4xl mx-auto"
+          onClick={onGenerateAgain}
+        >
+          Generate Again
+        </Button>
+      </div>
     </div>
   );
 };

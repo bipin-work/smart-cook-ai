@@ -1,19 +1,12 @@
 import { z } from "zod";
+import { insertIngredientSchema, insertRecipeSchema } from "@/lib/validators";
 
-export const RecipeSchema = z.object({
-  recipe: z.object({
-    name: z.string(),
-    prepTime: z.string().describe("Total time including prep and cook"),
-    ingredients: z.array(
-      z.object({
-        name: z.string(),
-        amount: z.string(),
-        unit: z.string(),
-      })
-    ),
-    steps: z.array(z.string()),
-    isOvenRequired: z.boolean(),
-  }),
-});
+export type InsertRecipe = z.infer<typeof insertRecipeSchema>;
+export type InsertIngredient = z.infer<typeof insertIngredientSchema>;
+export type Recipe = InsertRecipe & {
+  id: string;
+};
 
-export type Recipe = z.infer<typeof RecipeSchema>;
+export type Ingredient = InsertIngredient & {
+  id: string;
+};

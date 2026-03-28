@@ -11,13 +11,49 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LinkIcon, Sparkles, Loader2 } from "lucide-react";
+import { LinkIcon, Sparkles, Loader2 } from "lucide-react";
+import { InsertRecipe } from "@/types/recipe";
+import { extractRawContent } from "@/lib/extractContent";
+import { runExtraction } from "@/lib/extractor";
+import { toast } from "sonner";
 
-const GenerateRecipe = () => {
-  const [prompt, setPrompt] = useState<string | undefined>();
+const GenerateRecipe = ({
+  onRecipeGenerated,
+}: {
+  onRecipeGenerated: (recipe: InsertRecipe) => void;
+}) => {
+  const [prompt, setPrompt] = useState<string>();
   const [url, setUrl] = useState("");
-  const [generatedRecipe, setGeneratedRecipe] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateFromPrompt = () => {
+    prompt && handleGenerate(prompt);
+  };
+
+  const handleGenerateFromUrl = async () => {
+    const rawContent = await extractRawContent(url);
+    handleGenerate(rawContent);
+  };
+
+  const handleGenerate = async (rawInput: string) => {
+    setIsGenerating(true);
+    try {
+      const generatedRecipe = await runExtraction(rawInput);
+      console.log("gee", generatedRecipe);
+      if (!generatedRecipe) {
+        toast.error("Could not generate now. Try again later!");
+        return;
+      }
+      onRecipeGenerated(generatedRecipe as InsertRecipe);
+      toast.success("Recipe generated!");
+    } catch (error) {
+      console.log("Error extraction");
+      toast.error("Error generating recipe");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <Card className="mt-4">
       <CardHeader>
@@ -53,11 +89,12 @@ const GenerateRecipe = () => {
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="e.g., 'A healthy vegetarian pasta dish with seasonal vegetables' or 'Quick 20-minute dinner with chicken'"
                 rows={4}
+                minLength={1}
                 className="mt-2"
               />
             </div>
             <Button
-              onClick={() => {}}
+              onClick={handleGenerateFromPrompt}
               disabled={!prompt || isGenerating}
               className="w-full"
             >
@@ -87,7 +124,7 @@ const GenerateRecipe = () => {
               />
             </div>
             <Button
-              onClick={() => {}}
+              onClick={handleGenerateFromUrl}
               disabled={!url || isGenerating}
               className="w-full"
             >
