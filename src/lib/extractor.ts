@@ -15,6 +15,10 @@ export async function runExtraction(userInput: string) {
     });
     return output;
   } catch (err) {
-    console.log("Error extraction", err.message);
+    if (err instanceof Error) {
+      console.log("Error extraction", err.message);
+    } else {
+      console.log("Error extraction", err);
+    }
   }
 }
