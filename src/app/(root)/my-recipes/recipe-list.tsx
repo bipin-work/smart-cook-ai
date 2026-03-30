@@ -1,5 +1,5 @@
 "use client";
-
+import { useMemo } from "react";
 import { Recipe } from "@/types/recipe";
 import { Clock, Trash2, Users } from "lucide-react";
 import {
@@ -13,19 +13,38 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useState } from "react";
-import RecipeSearch from "./recipe-search";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/app/hooks/useDebounce";
 
-const RecipeList = ({ recipes }: { recipes: Recipe[] | undefined }) => {
-  const [searchQuery, setSearchQuery] = useState();
+const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedInput = useDebounce(searchQuery, 200);
 
   const handleDelete = (recipeId: string) => {};
-  if (!recipes) {
-    return <>No recipes</>;
-  }
+  const filteredRecipes = useMemo(() => {
+    const query = debouncedInput.toLowerCase();
+    return recipes.filter(
+      (recipe) =>
+        recipe.title.toLowerCase().includes(query) ||
+        recipe.description.toLowerCase().includes(query)
+    );
+  }, [debouncedInput, recipes]);
+
   return (
     <>
-      <RecipeSearch />
-      {recipes.length === 0 ? (
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+        <Input
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+          }}
+          placeholder="Search recipes..."
+          className="pl-10"
+        />{" "}
+      </div>
+      {filteredRecipes.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-gray-500">
@@ -47,7 +66,7 @@ const RecipeList = ({ recipes }: { recipes: Recipe[] | undefined }) => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recipes.map((recipe) => (
+          {filteredRecipes.map((recipe) => (
             <Card key={recipe.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
