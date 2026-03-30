@@ -39,3 +39,14 @@ export const SIDE_BAR_CONTENTS = [
     path: "/compare-recipes",
   },
 ];
+
+export const RECIPE_FORM_DEFAULTS = {
+  title: "",
+  description: "",
+  servings: 1,
+  source: "",
+  sourceUrl: "",
+  cookTime: "",
+  ingredients: [{ ingredient: "", quantity: "", unit: "" }],
+  instructions: [""],
+};
