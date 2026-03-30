@@ -1,9 +1,22 @@
 "use server";
-import { InsertRecipe } from "@/types/recipe";
+import { InsertRecipe, Recipe } from "@/types/recipe";
 import { insertRecipeSchema } from "../validators";
 import { title } from "process";
 import { prisma } from "@/db/prisma";
 import { success } from "zod";
+
+export async function getAllRecipes() {
+  try {
+    const allRecipes = await prisma.recipe.findMany();
+    console.log("All recipes", allRecipes);
+    if (!allRecipes) {
+      return [];
+    }
+    return allRecipes;
+  } catch (err) {
+    console.log("Error", err);
+  }
+}
 
 export async function saveRecipe(recipe: InsertRecipe) {
   try {
