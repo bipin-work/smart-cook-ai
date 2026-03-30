@@ -29,7 +29,10 @@ const GeneratedRecipe: React.FC<GeneratedRecipeProps> = ({
   };
   const handleSaveRecipe = async () => {
     startTransition(async () => {
-      const res = await saveRecipe(generatedRecipe);
+      const res = await saveRecipe(
+        generatedRecipe,
+        generatedRecipe?.sourceUrl ? "AI_URL" : "AI_PROMPT"
+      );
       if (!res?.success) {
         toast.error(res.message);
         return;
@@ -65,9 +68,9 @@ const GeneratedRecipe: React.FC<GeneratedRecipeProps> = ({
             <h3 className="mb-3">Ingredients</h3>
             <ul className="space-y-2">
               {generatedRecipe.ingredients.map((ing: InsertIngredient) => (
-                <li key={ing.name} className="flex items-center gap-2">
+                <li key={ing.ingredient} className="flex items-center gap-2">
                   <span className="size-1.5 rounded-full bg-orange-500" />
-                  {ing.amount} {ing.unit} {ing.name}
+                  {ing.quantity} {ing.unit} {ing.ingredient}
                 </li>
               ))}
             </ul>

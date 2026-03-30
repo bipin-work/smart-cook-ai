@@ -12,25 +12,85 @@ datasource db {
   provider  = "postgresql"
 }
 
+enum RecipeSource {
+  MANUAL
+  AI_PROMPT
+  AI_URL
+}
+
+model User {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String    @default("NO_NAME")
+  email     String       @unique
+  emailVerified DateTime? @db.Timestamp(6)
+  image         String?
+  password      String?
+  pantry    PantryItem[]
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
+}
+
 model Recipe {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title String
   description String
   cookTime String
   servings Int
+  source        RecipeSource
   sourceUrl String
   instructions Json
   createdAt  DateTime    @default(now()) @db.Timestamp(6)
-  ingredients Ingredient[]
+  ingredients   RecipeIngredient[]
+   tags          RecipeTag[]
   updatedAt     DateTime  @updatedAt @db.Timestamp(6)
+   @@index([title])
 }
 
 model Ingredient {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
-  amount String
-  unit String
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @unique
+  recipes   RecipeIngredient[]
+  pantry    PantryItem[]
+}
 
+model RecipeIngredient {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  recipeId     String @db.Uuid
+  recipe       Recipe  @relation(fields: [recipeId], references: [id])
+
+  ingredientId String @db.Uuid
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  quantity     Float?
+  unit         String?
+  preparation  String?
+}
+
+model PantryItem {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String @db.Uuid
+  ingredientId String  @db.Uuid
+
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  user          User @relation(fields: [userId], references: [id])
+
+  quantity     Float?
+  unit         String?
+}
+
+model Tag {
+  id     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String @unique
+  recipes RecipeTag[]
+}
+
+model RecipeTag {
   recipeId String @db.Uuid
-  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  tagId    String @db.Uuid
+
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([recipeId, tagId])
 }
