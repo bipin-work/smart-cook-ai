@@ -9,6 +9,17 @@ import {
 } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import SavedRecipeNumber from "./saved-recipe-number";
+import { Suspense } from "react";
+
+const DashboardSkeletonLines = () => {
+  return (
+    <>
+      <div className="h-6 w-1/4 bg-gray-300 rounded animate-pulse mb-2" />
+      <div className="h-6 w-1/2 bg-gray-300 rounded animate-pulse" />
+    </>
+  );
+};
 
 const Dashboard = () => {
   const recipeCount = 0;
@@ -35,9 +46,9 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-semibold text-orange-500">
-                {recipeCount}
-              </div>
+              <Suspense fallback={<DashboardSkeletonLines />}>
+                <SavedRecipeNumber />
+              </Suspense>
             </CardContent>
           </Card>
 

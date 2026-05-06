@@ -28,11 +28,17 @@ import { saveRecipe } from "@/lib/actions/recipe.actions";
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 
-const RecipeForm = () => {
+const RecipeForm = ({
+  isEdit,
+  values,
+}: {
+  isEdit: boolean;
+  values?: InsertRecipe;
+}) => {
   const [isPending, startTransition] = useTransition();
   const form = useForm<InsertRecipe>({
     resolver: zodResolver(insertRecipeSchema),
-    defaultValues: RECIPE_FORM_DEFAULTS,
+    defaultValues: isEdit ? values : RECIPE_FORM_DEFAULTS,
   });
   const {
     fields: ingredientFields,
@@ -72,7 +78,7 @@ const RecipeForm = () => {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Add New Recipe</CardTitle>
+          <CardTitle>{isEdit ? "Edit" : "Add New"} Recipe</CardTitle>
           <CardDescription>Manually input your recipe details</CardDescription>
         </CardHeader>
         <CardContent>
@@ -251,7 +257,11 @@ const RecipeForm = () => {
                 ))}
               </div>
               <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Saving..." : "Save Recipe"}
+                {isPending
+                  ? "Saving..."
+                  : isEdit
+                  ? "Edit Recipe"
+                  : "Save Recipe"}
               </Button>
             </form>
           </Form>

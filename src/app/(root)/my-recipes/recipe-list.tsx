@@ -115,6 +115,11 @@ const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
                     View Recipe
                   </Button>
                 </Link>
+                <Link href={`/recipe/edit/${recipe.id}`}>
+                  <Button size="sm" className="w-full mt-4">
+                    Edit Recipe
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}

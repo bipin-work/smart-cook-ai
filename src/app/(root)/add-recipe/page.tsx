@@ -8,7 +8,7 @@ const AddRecipe = () => {
   return (
     <div className="p-8">
       <div className="max-w-6xl mx-auto spacing-y-6">
-        <RecipeForm />
+        <RecipeForm isEdit={false} />
       </div>
     </div>
   );

@@ -6,6 +6,49 @@ import { prisma } from "@/db/prisma";
 import { success } from "zod";
 import { RecipeSource } from "@/generated/prisma/enums";
 
+export async function getRecipeById(recipeId: string): Promise<Recipe> {
+  try {
+    const recipe = await prisma.recipe.findFirst({
+      where: {
+        id: recipeId,
+      },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: true,
+          },
+        },
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+    if (!recipe) {
+      return {} as Recipe;
+    }
+    return {
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description,
+      sourceUrl: recipe.sourceUrl,
+      source: recipe.source,
+      cookTime: recipe.cookTime,
+      instructions: recipe.instructions as string[],
+      ingredients: recipe.ingredients.map((ing) => ({
+        ingredient: ing.ingredient.name,
+        quantity: ing.quantity?.toString() ?? "0",
+        unit: ing.unit ?? "",
+      })),
+      servings: recipe.servings,
+    };
+  } catch (err) {
+    console.log("Error", err);
+    return {} as Recipe;
+  }
+}
+
 export async function getAllRecipes(): Promise<Recipe[]> {
   try {
     const allRecipes = await prisma.recipe.findMany({
