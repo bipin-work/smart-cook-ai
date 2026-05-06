@@ -1,21 +1,9 @@
-// declare module "@auth/core/adapters" {
-//   interface AdapterUser {
-//     role?: string;
-//     name?: string;
-//   }
-// }
+import { DefaultSession } from "next-auth";
 
-// declare module "next-auth" {
-//   /**
-//    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-//    */
-//   interface Session {
-//     user: {
-//       role: string;
-//     } & DefaultSession["user"];
-//   }
-
-//   interface User {
-//     role: string;
-//   }
-// }
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession["user"];
+  }
+}

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Card,
@@ -59,7 +61,7 @@ const GenerateRecipe = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="size-5 text-purple-500" />
-          <CardTitle>Generate Recipe</CardTitle>
+          Generate Recipe
         </CardTitle>
         <CardDescription>
           Use AI to create recipes from prompts or extract them from blog posts
