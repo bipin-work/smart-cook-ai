@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useTransition } from "react";
 import { Recipe } from "@/types/recipe";
 import { Clock, Trash2, Users } from "lucide-react";
 import {
@@ -16,18 +16,33 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/app/hooks/useDebounce";
+import { deleteRecipeById } from "@/lib/actions/recipe.actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isPending, startTransition] = useTransition();
   const debouncedInput = useDebounce(searchQuery, 200);
+  const router = useRouter();
 
-  const handleDelete = (recipeId: string) => {};
+  const handleDelete = (recipeId: string) => {
+    startTransition(async () => {
+      const res = await deleteRecipeById(recipeId);
+      if (!res?.success) {
+        toast(res?.message);
+        return;
+      }
+      toast(res?.message);
+      router.refresh();
+    });
+  };
   const filteredRecipes = useMemo(() => {
     const query = debouncedInput.toLowerCase();
     return recipes.filter(
       (recipe) =>
         recipe.title.toLowerCase().includes(query) ||
-        recipe.description.toLowerCase().includes(query)
+        recipe.description.toLowerCase().includes(query),
     );
   }, [debouncedInput, recipes]);
 

@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 enum RecipeSource {
@@ -19,33 +19,33 @@ enum RecipeSource {
 }
 
 model User {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String    @default("NO_NAME")
-  email     String       @unique
-  emailVerified DateTime? @db.Timestamp(6)
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String       @default("NO_NAME")
+  email         String       @unique
+  emailVerified DateTime?    @db.Timestamp(6)
   image         String?
   password      String?
-  pantry    PantryItem[]
-  address   Json? @db.Json
+  pantry        PantryItem[]
+  address       Json?        @db.Json
   paymentMethod String?
-  createdAt     DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
-  account Account[]
-  session Session[]
+  createdAt     DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime     @updatedAt @db.Timestamp(6)
+  account       Account[]
+  session       Session[]
 }
 
 model Account {
-  userId String @db.Uuid
-  type String
-  provider String
+  userId            String  @db.Uuid
+  type              String
+  provider          String
   providerAccountId String
-  refresh_token String?
-  access_token String?
-  expires_at Int?
-  token_type String?
-  scope String?
-  id_token String?
-  session_state String?
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
@@ -53,78 +53,78 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
-
 }
 
 model Session {
-  sessionToken String @id
-  userId String @db.Uuid
-  expires DateTime @db.Timestamp(6)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @updatedAt
+  sessionToken String   @id
+  userId       String   @db.Uuid
+  expires      DateTime @db.Timestamp(6)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt
 }
 
 model VerificationToken {
   identifier String
-  token String
-  expires DateTime
+  token      String
+  expires    DateTime
 
   @@id([identifier, token])
 }
 
 model Recipe {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title String
-  description String
-  cookTime String
-  servings Int
-  source        RecipeSource
-  sourceUrl String
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  description  String
+  cookTime     String
+  servings     Int
+  source       RecipeSource
+  sourceUrl    String
   instructions Json
-  createdAt  DateTime    @default(now()) @db.Timestamp(6)
-  ingredients   RecipeIngredient[]
-   tags          RecipeTag[]
-  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
-   @@index([title])
+  createdAt    DateTime           @default(now()) @db.Timestamp(6)
+  ingredients  RecipeIngredient[]
+  tags         RecipeTag[]
+  updatedAt    DateTime           @updatedAt @db.Timestamp(6)
+
+  @@index([title])
 }
 
 model Ingredient {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String   @unique
-  recipes   RecipeIngredient[]
-  pantry    PantryItem[]
+  id      String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String             @unique
+  recipes RecipeIngredient[]
+  pantry  PantryItem[]
 }
 
 model RecipeIngredient {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  recipeId     String @db.Uuid
-  recipe       Recipe  @relation(fields: [recipeId], references: [id])
+  recipeId String @db.Uuid
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
-  ingredientId String @db.Uuid
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId String     @db.Uuid
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
-  quantity     Float?
-  unit         String?
-  preparation  String?
+  quantity    Float?
+  unit        String?
+  preparation String?
 }
 
 model PantryItem {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId       String @db.Uuid
-  ingredientId String  @db.Uuid
+  ingredientId String @db.Uuid
 
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
-  user          User @relation(fields: [userId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  quantity     Float?
-  unit         String?
+  quantity Float?
+  unit     String?
 }
 
 model Tag {
-  id     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name   String @unique
+  id      String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String      @unique
   recipes RecipeTag[]
 }
 
@@ -132,8 +132,8 @@ model RecipeTag {
   recipeId String @db.Uuid
   tagId    String @db.Uuid
 
-  recipe Recipe @relation(fields: [recipeId], references: [id])
-  tag    Tag    @relation(fields: [tagId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([recipeId, tagId])
 }

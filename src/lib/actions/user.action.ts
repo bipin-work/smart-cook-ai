@@ -5,6 +5,8 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/db/prisma";
 import { formatError } from "../utils";
+import { randomBytes } from "crypto";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function signInWithCredentials(
   prevState: unknown,
@@ -20,6 +22,13 @@ export async function signInWithCredentials(
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
+    }
+    if (error instanceof Error && error.message === "EMAIL_NOT_VERIFIED") {
+      return {
+        success: false,
+        message:
+          "Please verify your email before signing in. Check your inbox for the verification link.",
+      };
     }
     return { success: false, message: "Invalid email or password" };
   }
@@ -37,6 +46,7 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
       password: formData.get("password"),
       confirmPassword: formData.get("confirmPassword"),
     });
+
     const plainPassword = hashSync(user.password, 10);
     await prisma.user.create({
       data: {
@@ -45,11 +55,25 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
         password: plainPassword,
       },
     });
-    await signIn("credentials", {
-      email: user.email,
-      password: user.password,
+
+    const token = randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    await prisma.verificationToken.create({
+      data: {
+        identifier: user.email,
+        token,
+        expires,
+      },
     });
-    return { success: true, message: "User registered successfully" };
+
+    await sendVerificationEmail(user.email, user.name, token);
+
+    return {
+      success: true,
+      message:
+        "Account created! Please check your email to verify your account.",
+    };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;

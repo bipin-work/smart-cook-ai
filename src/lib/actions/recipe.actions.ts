@@ -139,3 +139,22 @@ export async function saveRecipe(recipe: InsertRecipe, source: RecipeSource) {
     };
   }
 }
+
+export async function deleteRecipeById(recipeId: string) {
+  try {
+    await prisma.recipe.delete({
+      where: {
+        id: recipeId,
+      },
+    });
+    return {
+      success: true,
+      message: "Recipe deleted !",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+  }
+}

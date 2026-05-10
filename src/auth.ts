@@ -21,20 +21,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { type: "password" },
       },
       async authorize(credentials) {
+        console.log("creds", credentials);
         if (credentials == null) {
           return null;
         }
+
         const user = await prisma.user.findFirst({
           where: {
             email: credentials.email as string,
           },
         });
+        console.log("user", user);
         if (user && user.password) {
           const isMatch = compareSync(
             credentials.password as string,
             user.password,
           );
           if (isMatch) {
+            if (!user.emailVerified) {
+              throw new Error("EMAIL_NOT_VERIFIED");
+            }
             return {
               id: user.id,
               name: user.name,
