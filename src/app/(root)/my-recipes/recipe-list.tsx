@@ -19,6 +19,7 @@ import { useDebounce } from "@/app/hooks/useDebounce";
 import { deleteRecipeById } from "@/lib/actions/recipe.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import RecipeCard from "@/components/shared/recipe-card";
 
 const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -82,61 +83,7 @@ const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRecipes.map((recipe) => (
-            <Card key={recipe.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <Link href={`/recipe/${recipe.id}`}>
-                      <CardTitle className="hover:text-orange-500 transition-colors">
-                        {recipe.title}
-                      </CardTitle>
-                    </Link>
-                    {recipe.sourceUrl && (
-                      <Badge variant="secondary" className="mt-2">
-                        {recipe.sourceUrl === "manual" ? "Manual" : "Generated"}
-                      </Badge>
-                    )}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDelete(recipe.id)}
-                  >
-                    <Trash2 className="size-4 text-red-500" />
-                  </Button>
-                </div>
-                <CardDescription className="line-clamp-2">
-                  {recipe.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  {recipe.cookTime && (
-                    <div className="flex items-center gap-1">
-                      <Clock className="size-4" />
-                      {recipe.cookTime}
-                    </div>
-                  )}
-                  <div className="flex items-center gap-1">
-                    <Users className="size-4" />
-                    {recipe.servings} servings
-                  </div>
-                </div>
-                <div className="mt-3 text-sm text-gray-500">
-                  {recipe.ingredients.length} ingredients
-                </div>
-                <Link href={`/recipe/${recipe.id}`}>
-                  <Button variant="outline" size="sm" className="w-full mt-4">
-                    View Recipe
-                  </Button>
-                </Link>
-                <Link href={`/recipe/edit/${recipe.id}`}>
-                  <Button size="sm" className="w-full mt-4">
-                    Edit Recipe
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       )}

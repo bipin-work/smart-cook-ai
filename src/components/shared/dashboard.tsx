@@ -11,6 +11,10 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import SavedRecipeNumber from "./saved-recipe-number";
 import { Suspense } from "react";
+import { getRecentRecipe, getRecipesCount } from "@/lib/actions/recipe.actions";
+import RecipeCard from "./recipe-card";
+import RecipeCount from "./recipe-count";
+import RecentRecipe from "./recent-recipe";
 
 const DashboardSkeletonLines = () => {
   return (
@@ -21,8 +25,7 @@ const DashboardSkeletonLines = () => {
   );
 };
 
-const Dashboard = () => {
-  const recipeCount = 0;
+const Dashboard = async () => {
   const pantryCount = 0;
   return (
     <div className="p-8">
@@ -111,39 +114,12 @@ const Dashboard = () => {
             </Card>
           </div>
         </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2>Recent Recipes</h2>
-            {recipeCount > 0 && (
-              <Link href="/my-recipes">
-                <Button variant="outline" size="sm">
-                  View All
-                </Button>
-              </Link>
-            )}
-          </div>
-          {recipeCount === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center text-gray-500">
-                <p>
-                  No recipes yet. Start by adding or generating your first
-                  recipe!
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <p className="text-gray-600">
-              You have {recipeCount} recipe{recipeCount !== 1 ? "s" : ""} saved.{" "}
-              <Link
-                href="/my-recipes"
-                className="text-orange-500 hover:underline"
-              >
-                Visit them here
-              </Link>
-            </p>
-          )}
-        </div>
+        <Suspense fallback={<DashboardSkeletonLines />}>
+          <RecipeCount />
+        </Suspense>
+        <Suspense fallback={<DashboardSkeletonLines />}>
+          <RecentRecipe />
+        </Suspense>
       </div>
     </div>
   );

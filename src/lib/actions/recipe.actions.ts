@@ -158,3 +158,71 @@ export async function deleteRecipeById(recipeId: string) {
     };
   }
 }
+
+export async function recordRecipeView(recipeId: string) {
+  try {
+    await prisma.recipe.update({
+      where: {
+        id: recipeId,
+      },
+      data: {
+        lastViewedAt: new Date(),
+      },
+    });
+    return {
+      success: true,
+      message: "Last view updated",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+  }
+}
+
+export async function getRecentRecipe() {
+  try {
+    const recipe = await prisma.recipe.findFirst({
+      orderBy: { lastViewedAt: "desc" },
+      where: { lastViewedAt: { not: undefined } },
+      include: {
+        ingredients: { include: { ingredient: true } },
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+    if (!recipe) {
+      return null;
+    }
+    return {
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description,
+      sourceUrl: recipe.sourceUrl,
+      source: recipe.source,
+      cookTime: recipe.cookTime,
+      instructions: recipe.instructions as string[],
+      ingredients: recipe.ingredients.map((ing) => ({
+        ingredient: ing.ingredient.name,
+        quantity: ing.quantity?.toString() ?? "0",
+        unit: ing.unit ?? "",
+      })),
+      servings: recipe.servings,
+    };
+  } catch (error) {
+    return {} as Recipe;
+  }
+}
+
+export async function getRecipesCount() {
+  try {
+    const recipeCount = await prisma.recipe.count();
+    return recipeCount || 0;
+  } catch (error) {
+    return 0;
+  }
+}

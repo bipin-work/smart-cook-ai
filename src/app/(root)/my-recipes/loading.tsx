@@ -5,15 +5,10 @@ import {
   CardHeader,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Clock, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import SkeletonLine from "@/components/shared/skeleton-line";
 
 export default function RecipeListLoader() {
   const placeholderRecipe = [...Array(10)];
-  console.log("place", placeholderRecipe);
   return (
     <div className="p-8">
       <div className="max-w-6xl mx-auto space-y-6">

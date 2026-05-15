@@ -81,6 +81,7 @@ model Recipe {
   source       RecipeSource
   sourceUrl    String
   instructions Json
+  lastViewedAt DateTime           @default(now()) @db.Timestamp(6)
   createdAt    DateTime           @default(now()) @db.Timestamp(6)
   ingredients  RecipeIngredient[]
   tags         RecipeTag[]
