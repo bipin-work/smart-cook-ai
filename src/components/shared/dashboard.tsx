@@ -1,4 +1,3 @@
-import Test from "@/app/Test";
 import { ChefHat, Package, Plus, Sparkles } from "lucide-react";
 import {
   Card,
@@ -8,12 +7,8 @@ import {
   CardContent,
 } from "../ui/card";
 import Link from "next/link";
-import { Button } from "../ui/button";
 import SavedRecipeNumber from "./saved-recipe-number";
 import { Suspense } from "react";
-import { getRecentRecipe, getRecipesCount } from "@/lib/actions/recipe.actions";
-import RecipeCard from "./recipe-card";
-import RecipeCount from "./recipe-count";
 import RecentRecipe from "./recent-recipe";
 
 const DashboardSkeletonLines = () => {
