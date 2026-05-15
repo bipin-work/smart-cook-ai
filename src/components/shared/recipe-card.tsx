@@ -1,5 +1,5 @@
 "use client";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Recipe } from "@/types/recipe";
 import {
   Card,
@@ -15,20 +15,24 @@ import { Badge } from "../ui/badge";
 import { deleteRecipeById } from "@/lib/actions/recipe.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import AlertDialog from "./alert-dialog";
+
 const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const handleDelete = (recipeId: string) => {
+
+  const handleDelete = () =>
     startTransition(async () => {
-      const res = await deleteRecipeById(recipeId);
+      const res = await deleteRecipeById(recipe.id);
       if (!res?.success) {
         toast(res?.message);
         return;
       }
       toast(res?.message);
+      setDialogOpen(false);
       router.refresh();
     });
-  };
   return (
     <Card className="hover:shadow-lg transition-shadow max-w-md">
       <CardHeader>
@@ -45,13 +49,17 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
               </Badge>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleDelete(recipe.id)}
+          <AlertDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            action={() => handleDelete()}
+            variant="destructive"
+            isPending={isPending}
           >
-            <Trash2 className="size-4 text-red-500" />
-          </Button>
+            <Button variant="ghost" size="icon">
+              <Trash2 className="size-4 text-red-500" />
+            </Button>
+          </AlertDialog>
         </div>
         <CardDescription className="line-clamp-2">
           {recipe.description}

@@ -114,12 +114,12 @@ const Dashboard = async () => {
             </Card>
           </div>
         </div>
-        <Suspense fallback={<DashboardSkeletonLines />}>
-          <RecipeCount />
-        </Suspense>
-        <Suspense fallback={<DashboardSkeletonLines />}>
-          <RecentRecipe />
-        </Suspense>
+        <div>
+          <h2 className="mb-4">Recent Recipes</h2>
+          <Suspense fallback={<DashboardSkeletonLines />}>
+            <RecentRecipe />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
