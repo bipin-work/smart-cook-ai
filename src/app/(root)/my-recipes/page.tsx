@@ -1,8 +1,8 @@
-import { getAllRecipes } from "@/lib/actions/recipe.actions";
+import { getAllCachedRecipes } from "@/lib/actions/recipe.actions";
 import RecipeList from "./recipe-list";
 
 const MyRecipes = async () => {
-  const allRecipe = await getAllRecipes();
+  const allRecipe = await getAllCachedRecipes();
 
   return (
     <div className="p-8">

@@ -1,10 +1,10 @@
 "use server";
 import { InsertRecipe, Recipe } from "@/types/recipe";
 import { insertRecipeSchema } from "../validators";
-import { title } from "process";
 import { prisma } from "@/db/prisma";
-import { success } from "zod";
+import { revalidateTag } from "next/cache";
 import { RecipeSource } from "@/generated/prisma/enums";
+import { unstable_cache } from "next/cache";
 
 export async function getRecipeById(recipeId: string): Promise<Recipe> {
   try {
@@ -109,9 +109,9 @@ export async function saveRecipe(recipe: InsertRecipe, source: RecipeSource) {
         servings: validatedData.servings,
         sourceUrl: validatedData.sourceUrl,
         cookTime: validatedData.cookTime,
-        instructions: validatedData.instructions, // Prisma handles the string[] -> Json conversion
+        instructions: validatedData.instructions,
         source: source,
-        // This is the part that fixes the TS(2322) error
+
         ingredients: {
           create: validatedData.ingredients.map((ing) => ({
             quantity: parseFloat(ing.quantity),
@@ -122,11 +122,12 @@ export async function saveRecipe(recipe: InsertRecipe, source: RecipeSource) {
                 create: { name: ing.ingredient },
               },
             },
-            // No need to pass recipeId; Prisma handles the relation automatically!
           })),
         },
       },
     });
+    // @ts-expect-error — single-arg form required for unstable_cache tag invalidation
+    revalidateTag("recipes");
     return {
       success: true,
       message: "Recipe saved successfully",
@@ -147,6 +148,8 @@ export async function deleteRecipeById(recipeId: string) {
         id: recipeId,
       },
     });
+    // @ts-expect-error — single-arg form required for unstable_cache tag invalidation
+    revalidateTag("recipes");
     return {
       success: true,
       message: "Recipe deleted !",
@@ -169,11 +172,14 @@ export async function recordRecipeView(recipeId: string) {
         lastViewedAt: new Date(),
       },
     });
+    // @ts-expect-error — single-arg form required for unstable_cache tag invalidation
+    revalidateTag("recent-recipe");
     return {
       success: true,
       message: "Last view updated",
     };
   } catch (error) {
+    console.log("[recordRecipeView] error", error);
     return {
       success: false,
       message: "Something went wrong",
@@ -226,3 +232,27 @@ export async function getRecipesCount() {
     return 0;
   }
 }
+
+export const getAllCachedRecipes = unstable_cache(
+  getAllRecipes,
+  ["all-recipes"],
+  {
+    tags: ["recipes"],
+  },
+);
+
+export const getCachedRecentRecipe = unstable_cache(
+  getRecentRecipe,
+  ["recent-recipe"],
+  {
+    tags: ["recent-recipe"],
+  },
+);
+
+export const getCachedRecipesCount = unstable_cache(
+  getRecipesCount,
+  ["recipe-count"],
+  {
+    tags: ["recipes"],
+  },
+);
