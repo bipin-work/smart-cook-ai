@@ -1,6 +1,8 @@
 import Header from "@/components/shared/header";
 import SideNav from "@/components/shared/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
