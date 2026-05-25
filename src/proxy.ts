@@ -1,7 +1,14 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-const protectedPaths = [/\/my-recipes/];
+const protectedPaths = [
+  /\/my-recipes/,
+  /\/dashboard/,
+  /\/add-recipe/,
+  /\/pantry/,
+  /\/compare-recipes/,
+  /\//,
+];
 
 export const proxy = auth((request) => {
   const session = request.auth;

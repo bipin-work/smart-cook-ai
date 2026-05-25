@@ -1,3 +1,4 @@
+"use client";
 import {
   Drawer,
   DrawerContent,
@@ -9,10 +10,20 @@ import {
 import { Button } from "../ui/button";
 import { Menu, X } from "lucide-react";
 import NavLinks from "./nav-links";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const SideDrawer = () => {
   const [isOpen, setOpen] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const handler = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   return (
     <Drawer open={isOpen} onOpenChange={setOpen} direction="left">
       <DrawerTrigger asChild>
