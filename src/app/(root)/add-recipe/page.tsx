@@ -6,7 +6,7 @@ export const metadata = {
 
 const AddRecipe = () => {
   return (
-    <div className="p-8">
+    <div className="md:p-8 ">
       <div className="max-w-6xl mx-auto spacing-y-6">
         <RecipeForm isEdit={false} />
       </div>

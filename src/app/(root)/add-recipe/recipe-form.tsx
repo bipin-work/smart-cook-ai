@@ -59,7 +59,7 @@ const RecipeForm = ({
   const removeInstruction = (index: number) => {
     form.setValue(
       "instructions",
-      instructions.filter((_, i) => i != index)
+      instructions.filter((_, i) => i != index),
     );
   };
 
@@ -76,12 +76,12 @@ const RecipeForm = ({
 
   return (
     <>
-      <Card>
-        <CardHeader>
+      <Card className="ring-0  border-0 shadow-none md:border md:ring-1 md:shadow-sm">
+        <CardHeader className="px-6">
           <CardTitle>{isEdit ? "Edit" : "Add New"} Recipe</CardTitle>
           <CardDescription>Manually input your recipe details</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-6">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
@@ -260,8 +260,8 @@ const RecipeForm = ({
                 {isPending
                   ? "Saving..."
                   : isEdit
-                  ? "Edit Recipe"
-                  : "Save Recipe"}
+                    ? "Edit Recipe"
+                    : "Save Recipe"}
               </Button>
             </form>
           </Form>
