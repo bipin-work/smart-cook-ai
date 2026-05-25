@@ -25,7 +25,7 @@ const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative mx-3 md:mx-0">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
         <Input
           value={searchQuery}
@@ -37,7 +37,7 @@ const RecipeList = ({ recipes }: { recipes: Recipe[] }) => {
         />{" "}
       </div>
       {filteredRecipes.length === 0 ? (
-        <Card>
+        <Card className="ring-0  shadow-none  md:ring-1 md:shadow-sm">
           <CardContent className="py-12 text-center">
             <p className="text-gray-500">
               {searchQuery

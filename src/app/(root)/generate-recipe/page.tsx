@@ -11,7 +11,7 @@ import { InsertRecipe } from "@/types/recipe";
 const GenerateRecipePage = () => {
   const router = useRouter();
   const [generatedRecipe, setGeneratedRecipe] = useState<InsertRecipe | null>(
-    null
+    null,
   );
 
   const onRecipeGenerated = (recipe: InsertRecipe) => {
@@ -23,7 +23,7 @@ const GenerateRecipePage = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="md:p-8">
       <div className="max-w-4xl mx-auto">
         <Button variant="ghost" onClick={() => router.back()}>
           <ArrowLeft className="size-sm text-black-600" />

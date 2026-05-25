@@ -76,7 +76,7 @@ const RecipeForm = ({
 
   return (
     <>
-      <Card className="ring-0  border-0 shadow-none md:border md:ring-1 md:shadow-sm">
+      <Card className="ring-0  shadow-none  md:ring-1 md:shadow-sm">
         <CardHeader className="px-6">
           <CardTitle>{isEdit ? "Edit" : "Add New"} Recipe</CardTitle>
           <CardDescription>Manually input your recipe details</CardDescription>

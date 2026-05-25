@@ -5,9 +5,9 @@ const MyRecipes = async () => {
   const allRecipe = await getAllCachedRecipes();
 
   return (
-    <div className="p-8">
+    <div className="md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
-        <div>
+        <div className="p-8 md:p-0">
           <h1 className="mb-2">My Recipes</h1>
           <p className="text-gray-600">Manage your saved recipe collection</p>
         </div>

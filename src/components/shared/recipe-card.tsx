@@ -34,7 +34,7 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
       router.refresh();
     });
   return (
-    <Card className="hover:shadow-lg transition-shadow max-w-md">
+    <Card className="hover:shadow-lg transition-shadow max-w-md ring-0  shadow-none  md:ring-1 md:shadow-sm">
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
