@@ -2,12 +2,13 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
 const protectedPaths = [
-  /\/my-recipes/,
-  /\/dashboard/,
-  /\/add-recipe/,
-  /\/pantry/,
-  /\/compare-recipes/,
-  /\//,
+  /^\/$/,
+  /^\/my-recipes/,
+  /^\/generate-recipe/,
+  /^\/dashboard/,
+  /^\/add-recipe/,
+  /^\/pantry/,
+  /^\/compare-recipes/,
 ];
 
 export const proxy = auth((request) => {
@@ -24,5 +25,13 @@ export const proxy = auth((request) => {
 });
 
 export const config = {
-  matcher: ["/my-recipes/:path*"],
+  matcher: [
+    "/",
+    "/my-recipes/:path*",
+    "/dashboard/:path*",
+    "/add-recipe/:path*",
+    "/generate-recipe/:path*",
+    "/pantry/:path*",
+    "/compare-recipes/:path*",
+  ],
 };
