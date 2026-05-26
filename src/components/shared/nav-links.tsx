@@ -45,7 +45,7 @@ const NavLinks: React.FC<NavLinksProps> = ({
           </Link>
         ))}
       </nav>
-      <div className="border-t border-recipe-border p-4">
+      <div className="border-t border-recipe-border px-4 pt-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 bg-recipe-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
             <User className="h-5 w-5 text-white" />
