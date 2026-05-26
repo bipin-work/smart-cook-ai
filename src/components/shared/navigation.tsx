@@ -1,12 +1,10 @@
-import Link from "next/link";
-import { ChefHat } from "lucide-react";
-import { SIDE_BAR_CONTENTS } from "@/lib/constants";
-import { Button } from "../ui/button";
 import NavLinks from "./nav-links";
-const SideNav = () => {
+import type { User } from "next-auth";
+
+const SideNav = ({ user }: { user: User | null }) => {
   return (
     <div className="hidden md:flex h-screen bg-gray-50">
-      <NavLinks />
+      <NavLinks user={user} />
     </div>
   );
 };
