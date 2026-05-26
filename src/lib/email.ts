@@ -2,14 +2,14 @@ import { Resend } from "resend";
 import VerifyEmail from "@/emails/verify-email";
 import ResetPasswordEmail from "@/emails/reset-password-email";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function sendVerificationEmail(
   email: string,
   name: string,
   token: string,
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
 
   await resend.emails.send({
@@ -25,7 +25,7 @@ export async function sendPasswordResetEmail(
   name: string,
   token: string,
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const resetUrl = `${baseUrl}/reset-password?token=${token}`;
 
   await resend.emails.send({
