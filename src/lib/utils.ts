@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function formatError(error: any) {
+export function formatError(error: any) {
   if (error.name === "ZodError") {
     // handle zod error
     const flattenedError = error.flatten().fieldErrors;

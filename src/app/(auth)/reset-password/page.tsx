@@ -30,7 +30,7 @@ const ResetPassword = () => {
     data.append("confirmPassword", formData.confirmPassword);
     const res = await resetPassword(data);
     if (!res.success) {
-      setError(res.message);
+      setError(res?.message);
       return;
     }
     setIsSuccess(true);
@@ -156,7 +156,9 @@ const ResetPassword = () => {
             </div>
 
             {error && (
-              <p className="text-sm text-red-500 tracking-[-0.1504px]">{error}</p>
+              <p className="text-sm text-red-500 tracking-[-0.1504px]">
+                {error}
+              </p>
             )}
 
             <button

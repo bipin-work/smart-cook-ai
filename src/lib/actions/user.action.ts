@@ -116,7 +116,9 @@ export async function requestPasswordReset(
   }
 }
 
-export async function resetPassword(formData: FormData) {
+export async function resetPassword(
+  formData: FormData,
+): Promise<{ success: boolean; message: string }> {
   try {
     const token = formData.get("token") as string;
     const password = formData.get("password") as string;
