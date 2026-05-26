@@ -11,8 +11,9 @@ import { Button } from "../ui/button";
 import { Menu, X } from "lucide-react";
 import NavLinks from "./nav-links";
 import { useState, useEffect } from "react";
+import type { User } from "next-auth";
 
-const SideDrawer = () => {
+const SideDrawer = ({ user }: { user: User | null }) => {
   const [isOpen, setOpen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const SideDrawer = () => {
         <DrawerDescription className="sr-only">
           A smart way to handle recipes.
         </DrawerDescription>
-        <NavLinks size="lg" onNavigate={() => setOpen(false)} />
+        <NavLinks size="lg" onNavigate={() => setOpen(false)} user={user} />
       </DrawerContent>
     </Drawer>
   );
