@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { CheckCircle, EyeOff, Eye, Lock, ChefHat } from "lucide-react";
 import Link from "next/link";
