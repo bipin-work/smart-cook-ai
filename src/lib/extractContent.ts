@@ -1,3 +1,4 @@
+"use server";
 import { scrapeBlogText } from "./scrapeBlog";
 import { isYoutubeUrl } from "./url";
 import { getYoutubeTranscript } from "./youtube";

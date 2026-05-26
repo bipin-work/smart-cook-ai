@@ -1,4 +1,7 @@
+import Header from "@/components/shared/header";
 import SideNav from "@/components/shared/navigation";
+
+export const dynamic = "force-dynamic";
 
 export default function RootLayout({
   children,
@@ -6,9 +9,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-screen flex-row">
+    <div className="flex h-screen flex-col md:flex-row">
+      <Header />
       <SideNav />
-      <main className="flex-1 wrapper">{children}</main>
+      <main className="flex-1 overflow-y-auto wrapper">{children}</main>
     </div>
   );
 }

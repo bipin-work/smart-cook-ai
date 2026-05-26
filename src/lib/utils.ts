@@ -1,6 +1,30 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function formatError(error: any) {
+  if (error.name === "ZodError") {
+    // handle zod error
+    const flattenedError = error.flatten().fieldErrors;
+    const fieldErrors = Object.keys(flattenedError).map(
+      (field) => flattenedError[field][0],
+    );
+    return fieldErrors.join(". ");
+  } else if (
+    error.name === "PrismaClientKnownRequestError" &&
+    error.code == "P2002"
+  ) {
+    // handle prisma error
+    const field = error.meta?.target ? error.meta.target[0] : "Field";
+    return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+  } else {
+    // handle other error
+    return typeof error.message === "string"
+      ? error.message
+      : JSON.stringify(error.message);
+  }
 }

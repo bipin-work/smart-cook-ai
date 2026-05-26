@@ -31,7 +31,7 @@ const GeneratedRecipe: React.FC<GeneratedRecipeProps> = ({
     startTransition(async () => {
       const res = await saveRecipe(
         generatedRecipe,
-        generatedRecipe?.sourceUrl ? "AI_URL" : "AI_PROMPT"
+        generatedRecipe?.sourceUrl ? "AI_URL" : "AI_PROMPT",
       );
       if (!res?.success) {
         toast.error(res.message);
@@ -43,7 +43,7 @@ const GeneratedRecipe: React.FC<GeneratedRecipeProps> = ({
   };
   return (
     <div className="space-y-4">
-      <Card>
+      <Card className="ring-0  shadow-none  md:ring-1 md:shadow-sm">
         <CardHeader>
           <CardTitle>
             {generatedRecipe.title}{" "}

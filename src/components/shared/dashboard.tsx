@@ -1,4 +1,3 @@
-import Test from "@/app/Test";
 import { ChefHat, Package, Plus, Sparkles } from "lucide-react";
 import {
   Card,
@@ -8,10 +7,20 @@ import {
   CardContent,
 } from "../ui/card";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import SavedRecipeNumber from "./saved-recipe-number";
+import { Suspense } from "react";
+import RecentRecipe from "./recent-recipe";
 
-const Dashboard = () => {
-  const recipeCount = 0;
+const DashboardSkeletonLines = () => {
+  return (
+    <>
+      <div className="h-6 w-1/4 bg-gray-300 rounded animate-pulse mb-2" />
+      <div className="h-6 w-1/2 bg-gray-300 rounded animate-pulse" />
+    </>
+  );
+};
+
+const Dashboard = async () => {
   const pantryCount = 0;
   return (
     <div className="p-8">
@@ -35,9 +44,9 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-semibold text-orange-500">
-                {recipeCount}
-              </div>
+              <Suspense fallback={<DashboardSkeletonLines />}>
+                <SavedRecipeNumber />
+              </Suspense>
             </CardContent>
           </Card>
 
@@ -100,38 +109,11 @@ const Dashboard = () => {
             </Card>
           </div>
         </div>
-
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2>Recent Recipes</h2>
-            {recipeCount > 0 && (
-              <Link href="/my-recipes">
-                <Button variant="outline" size="sm">
-                  View All
-                </Button>
-              </Link>
-            )}
-          </div>
-          {recipeCount === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center text-gray-500">
-                <p>
-                  No recipes yet. Start by adding or generating your first
-                  recipe!
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <p className="text-gray-600">
-              You have {recipeCount} recipe{recipeCount !== 1 ? "s" : ""} saved.{" "}
-              <Link
-                href="/my-recipes"
-                className="text-orange-500 hover:underline"
-              >
-                Visit them here
-              </Link>
-            </p>
-          )}
+          <h2 className="mb-4">Recent Recipes</h2>
+          <Suspense fallback={<DashboardSkeletonLines />}>
+            <RecentRecipe />
+          </Suspense>
         </div>
       </div>
     </div>
