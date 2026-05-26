@@ -22,7 +22,7 @@ const NavLinks: React.FC<NavLinksProps> = ({
   const isActive = (path: string) => pathName === path;
 
   return (
-    <aside className="w-full md:w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
+    <aside className="w-full md:w-64 h-dvh bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 border-b border-gray-200">
         <Link href="/" className="flex items-center gap-2">
           <ChefHat className="size-8 text-orange-500" />

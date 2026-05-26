@@ -3,7 +3,7 @@ import type { User } from "next-auth";
 
 const SideNav = ({ user }: { user: User | null }) => {
   return (
-    <div className="hidden md:flex h-screen bg-gray-50">
+    <div className="hidden md:flex h-dvh bg-gray-50">
       <NavLinks user={user} />
     </div>
   );
