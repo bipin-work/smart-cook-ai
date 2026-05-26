@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import VerifyEmail from "@/emails/verify-email";
+import ResetPasswordEmail from "@/emails/reset-password-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -16,5 +17,21 @@ export async function sendVerificationEmail(
     to: email,
     subject: "Verify your SmartCook AI account",
     react: VerifyEmail({ name, verificationUrl }),
+  });
+}
+
+export async function sendPasswordResetEmail(
+  email: string,
+  name: string,
+  token: string,
+) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const resetUrl = `${baseUrl}/reset-password?token=${token}`;
+
+  await resend.emails.send({
+    from: "SmartCook AI <onboarding@resend.dev>",
+    to: email,
+    subject: "Reset your SmartCook AI password",
+    react: ResetPasswordEmail({ name, resetUrl }),
   });
 }
